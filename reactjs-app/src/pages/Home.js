@@ -53,6 +53,7 @@ function Home() {
   }
 
   useEffect(() => {
+    localStorage.getItem('user-token') ? setIsLoggedIn(true) : setIsLoggedIn(false);
     !isLoggedIn && navigate('/login')
     getUsers();
   }, [isLoggedIn]);
