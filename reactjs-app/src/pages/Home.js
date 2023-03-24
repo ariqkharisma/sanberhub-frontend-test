@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Loading from "../components/Loading";
 import AddUser from "../components/AddUser";
+import EditUser from "../components/EditUser";
 
 function Home() {
   const [users, setUsers] = useState([]);
@@ -41,6 +42,33 @@ function Home() {
       setLoading(true);
       const { data } = await axios.post(
         "https://cms-admin.ihsansolusi.co.id/testapi/user",
+        {
+          name,
+          address,
+          gender,
+          born_date
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+          },
+        }
+      );
+      setModal(false);
+      getUsers();
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setError(error.message)
+      setLoading(false);
+    }
+  }
+
+  const editUser = async(name, address, gender, born_date, id) => {
+    try {
+      setLoading(true);
+      const { data } = await axios.put(
+        "https://cms-admin.ihsansolusi.co.id/testapi/user/" + id,
         {
           name,
           address,
@@ -123,16 +151,25 @@ function Home() {
                 <tbody className="border-2" key={index}>
                   <td className="text-center">{user.name}</td>
                   <td className="text-center">{user.address}</td>
-                  <td className="text-center">{user.gender}</td>
+                  <td className="text-center">{user.gender === "l" ? "Laki-Laki" : "Perempuan"}</td>
                   <td className="text-center">{user.born_date}</td>
                   <td className="text-center">{user.created_at}</td>
                   <td className="text-center">
                     <button className="bg-blue-400 py-2 px-3 m-1 rounded-md" onClick={() => navigate('/user/' + user.id)}>
                       Detail
                     </button>
-                    <button className="bg-green-400 py-2 px-3 m-1 rounded-md">
+                    <button className="bg-green-400 py-2 px-3 m-1 rounded-md" onClick={() => setModal(true)}>
                       Edit
                     </button>
+                    {modal && (
+                      <EditUser
+                        setModal={setModal}
+                        editUser={editUser}
+                        loading={loading}
+                        error={error}
+                        setError={setError}
+                        user={user}
+                      />)}
                     <button className="bg-red-400 py-2 px-3 m-1 rounded-md" onClick={() => deleteData(user.id)}>
                       Delete
                     </button>
