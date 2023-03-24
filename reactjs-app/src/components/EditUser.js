@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Loading from "./Loading";
 
 function EditUser({ setModal, editUser, loading, error, setError, user }) {
@@ -6,6 +7,7 @@ function EditUser({ setModal, editUser, loading, error, setError, user }) {
   const [address, setAddress] = useState(user.address);
   const [bornDate, setBornDate] = useState(user.born_date);
   const [gender, setGender] = useState(user.gender);
+  const navigate = useNavigate();
 
   return (
     <div className="absolute top-0 left-0 z-50 w-screen h-screen flex justify-center items-center">
@@ -66,9 +68,7 @@ function EditUser({ setModal, editUser, loading, error, setError, user }) {
             <button
               className="p-2 bg-red-500 shadow-md rounded-md"
               onClick={(e) => {
-                e.preventDefault();
-                setModal(false);
-                setError(null);
+                navigate('/')
               }}
             >
               Close
