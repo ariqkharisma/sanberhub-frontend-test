@@ -4,7 +4,7 @@ import Loading from "./Loading";
 function EditUser({ setModal, editUser, loading, error, setError, user }) {
   const [name, setName] = useState(user.name);
   const [address, setAddress] = useState(user.address);
-  const [bornDate, setBornDate] = useState(user.bornDate);
+  const [bornDate, setBornDate] = useState(user.born_date);
   const [gender, setGender] = useState(user.gender);
 
   return (

@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Loading from "../components/Loading";
 import AddUser from "../components/AddUser";
-import EditUser from "../components/EditUser";
 
 function Home() {
   const [users, setUsers] = useState([]);
@@ -33,20 +32,20 @@ function Home() {
   };
 
   const logout = () => {
-    localStorage.removeItem('user-token');
+    localStorage.removeItem("user-token");
     setIsLoggedIn(false);
   };
 
-  const addUser = async(name, address, gender, born_date) => {
+  const addUser = async (name, address, gender, born_date) => {
     try {
       setLoading(true);
-      const { data } = await axios.post(
+      await axios.post(
         "https://cms-admin.ihsansolusi.co.id/testapi/user",
         {
           name,
           address,
           gender,
-          born_date
+          born_date,
         },
         {
           headers: {
@@ -59,81 +58,63 @@ function Home() {
       setLoading(false);
     } catch (error) {
       console.log(error);
-      setError(error.message)
+      setError(error.message);
       setLoading(false);
     }
-  }
+  };
 
-  const editUser = async(name, address, gender, born_date, id) => {
+  const deleteData = async (id) => {
     try {
       setLoading(true);
-      const { data } = await axios.put(
+      await axios.delete(
         "https://cms-admin.ihsansolusi.co.id/testapi/user/" + id,
-        {
-          name,
-          address,
-          gender,
-          born_date
-        },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("user-token")}`,
           },
         }
       );
-      setModal(false);
-      getUsers();
       setLoading(false);
+      getUsers();
     } catch (error) {
       console.log(error);
-      setError(error.message)
       setLoading(false);
     }
-  }
-
-  const deleteData = async(id) => {
-    try {
-        setLoading(true);
-        const res = await axios.delete(
-          "https://cms-admin.ihsansolusi.co.id/testapi/user/" + id, 
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("user-token")}`,
-            },
-          }
-        );
-        setLoading(false);
-        getUsers();
-      } catch (error) {
-        console.log(error);
-        setLoading(false);
-      }
-  }
+  };
 
   useEffect(() => {
-    localStorage.getItem('user-token') ? setIsLoggedIn(true) : setIsLoggedIn(false);
-    !isLoggedIn && navigate('/login')
+    localStorage.getItem("user-token")
+      ? setIsLoggedIn(true)
+      : setIsLoggedIn(false);
+    !isLoggedIn && navigate("/login");
     getUsers();
-  }, [isLoggedIn]);
+  }, [isLoggedIn, navigate]);
 
   return !loading ? (
     <>
-        <div className="flex justify-between pt-20 pb-2 px-10">
-            <button className="bg-slate-400 py-2 px-3 m-1 rounded-md" onClick={() =>setModal(true)}>
-                Add New User
-            </button>
-            {modal && (
-              <AddUser
-                setModal={setModal}
-                addUser={addUser}
-                loading={loading}
-                error={error}
-                setError={setError}
-              />)}
-            <button className="bg-red-500 py-2 px-3 m-1 rounded-md" onClick={() => logout()}>
-                Logout
-            </button>
-        </div>
+      <div className="flex justify-between pt-20 pb-2 px-10">
+        <button
+          className="bg-slate-400 py-2 px-3 m-1 rounded-md"
+          onClick={() => setModal(true)}
+        >
+          Add New User
+        </button>
+        {modal && (
+          <AddUser
+            setModal={setModal}
+            addUser={addUser}
+            loading={loading}
+            error={error}
+            setError={setError}
+          />
+        )}
+        <button
+          className="bg-red-500 py-2 px-3 m-1 rounded-md"
+          onClick={() => logout()}
+        >
+          Logout
+        </button>
+      </div>
       <div className="flex flex-col justify-center items-center">
         <table className="w-[80rem]">
           <thead className="border-2 bg-slate-100">
@@ -151,26 +132,28 @@ function Home() {
                 <tbody className="border-2" key={index}>
                   <td className="text-center">{user.name}</td>
                   <td className="text-center">{user.address}</td>
-                  <td className="text-center">{user.gender === "l" ? "Laki-Laki" : "Perempuan"}</td>
+                  <td className="text-center">
+                    {user.gender === "l" ? "Pria" : "Wanita"}
+                  </td>
                   <td className="text-center">{user.born_date}</td>
                   <td className="text-center">{user.created_at}</td>
                   <td className="text-center">
-                    <button className="bg-blue-400 py-2 px-3 m-1 rounded-md" onClick={() => navigate('/user/' + user.id)}>
+                    <button
+                      className="bg-blue-400 py-2 px-3 m-1 rounded-md"
+                      onClick={() => navigate("/user/" + user.id)}
+                    >
                       Detail
                     </button>
-                    <button className="bg-green-400 py-2 px-3 m-1 rounded-md" onClick={() => setModal(true)}>
+                    <button
+                      className="bg-green-400 py-2 px-3 m-1 rounded-md"
+                      onClick={() => navigate("/edit/" + user.id)}
+                    >
                       Edit
                     </button>
-                    {modal && (
-                      <EditUser
-                        setModal={setModal}
-                        editUser={editUser}
-                        loading={loading}
-                        error={error}
-                        setError={setError}
-                        user={user}
-                      />)}
-                    <button className="bg-red-400 py-2 px-3 m-1 rounded-md" onClick={() => deleteData(user.id)}>
+                    <button
+                      className="bg-red-400 py-2 px-3 m-1 rounded-md"
+                      onClick={() => deleteData(user.id)}
+                    >
                       Delete
                     </button>
                   </td>

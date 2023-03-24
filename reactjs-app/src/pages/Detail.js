@@ -8,7 +8,7 @@ function Detail() {
     const [loading, setLoading] = useState();
     const [user, setUser] = useState();
 
-    const getUserById = async () => {
+    const getUserById = async (id) => {
         try {
             setLoading(true);
             const { data } = await axios.get(
@@ -28,8 +28,8 @@ function Detail() {
     }
 
     useEffect(() => {
-      getUserById();
-    }, [])
+      getUserById(id);
+    }, [id])
     
 
   return (
