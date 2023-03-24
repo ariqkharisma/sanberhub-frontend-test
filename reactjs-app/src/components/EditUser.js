@@ -12,7 +12,7 @@ function EditUser({ setModal, editUser, loading, error, setError, user }) {
       <div className="px-6 py-6 fixed max-w-xs container bg-white shadow-xl border border-gray rounded-md flex justify-center items-center">
         <form className="flex flex-col w-full">
           <h1 className="pb-5 text-xl text-purple font-semibold text-center">
-            Add New User
+            Edit User
           </h1>
           <label className="py-1 flex justify-start">Name</label>
           <input

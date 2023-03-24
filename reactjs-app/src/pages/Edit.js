@@ -12,7 +12,6 @@ function Edit() {
 
   const getUserById = async (id) => {
     try {
-      console.log(id);
       setLoading(true);
       const { data } = await axios.get(
         "https://cms-admin.ihsansolusi.co.id/testapi/user/" + id,
